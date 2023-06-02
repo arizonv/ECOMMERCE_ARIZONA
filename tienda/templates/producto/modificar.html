@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block content %}
+
+{% block head %}
+<LINK REL=StyleSheet HREF='{% static 'css/update.css' %}' TYPE="text/css">
+{% endblock %}
+
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h1 class="h3 mb-4 text-center titulo-form">Modificando producto</h1>
+            <form action="" method="post" class="form">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <div class="d-flex justify-content-end mt-4">
+                <a href="{% url 'tienda:listar'%}" class="btn btn-outline-secondary me-2">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<body class="body">
+    <br>
+    <br>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6">
+            <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+                <div class="card-body">
+                    <h1 class="titulo-form mb-4 text-center">Iniciar sesión</h1>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{ form }}
+                        <div class="botones mt-4">
+                            <a href="{% url 'home'%}" class="btn btn-secondary me-2">Home</a>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                        <br>
+                        <p>Si no tienes una cuenta, <a href="{% url 'accounts:registro' %}">Registrate!</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<style>
+    .titulo-form {
+        color: #3B3B3B;
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        margin-top: 1rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        padding: 0.5rem;
+        border: 1px solid #CED4DA;
+        border-radius: 0.25rem;
+        width: 100%;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+    }
+
+    .botones {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Estilos específicos para pantallas pequeñas */
+    @media screen and (max-width: 576px) {
+        .titulo-form {
+            font-size: 2rem;
+        }
+
+        .botones {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+    }
+</style>
+
+{% endblock %}

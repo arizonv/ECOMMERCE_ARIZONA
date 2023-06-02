@@ -1,0 +1,42 @@
+
+/******************************************************************/
+
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 40px;
+    font-family: var(--bs-font-sans-serif);
+    box-sizing: border-box;
+    color: #212529;
+    background-color: #fff;
+    padding-top: 75px; /* Ajusta el valor según la altura de tu navbar */
+    padding-bottom: 50px; /* Ajusta el valor según la altura de tu navbar */
+
+  }
+/******************************************************************/
+
+
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  background-color: #ffffff; /* Cambia el color de fondo a gris según tu preferencia */
+  color: #000000; /* Cambia el color de las letras a blanco según tu preferencia */
+}
+
+.navbar .navbar-nav .nav-link {
+  color: #000000; /* Cambia el color de los enlaces a blanco según tu preferencia */
+}
+
+/******************************************************************/
+
+
+

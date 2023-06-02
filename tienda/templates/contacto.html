@@ -1,0 +1,127 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<body class="body">
+    <br>
+    <br>
+    <div class="row justify-content-center">
+        <div class="d-flex justify-content-center col-lg-12 col-md-12 col-sm-12 col-xs-10">
+            <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+                <div class="card-body">
+                    <h1 class="titulo-form mb-4 text-center">Contactanos</h1>
+                    <form action="" method="post" class="formulario" id="formulario">
+                        {% csrf_token %}
+                        {{ form.nombre.label_tag }}{{ form.nombre }}
+                        {{ form.apellido.label_tag }}{{ form.apellido }}
+                        {{ form.email.label_tag }}{{ form.email }}
+                        {{ form.numero.label_tag }}{{ form.numero }}
+                        {{ form.descripcion.label_tag }}{{ form.descripcion }}
+
+                        <!-- comunas -------------------------------------->
+
+                        <div>
+                            <label for="{{ form.region.id_for_label }}">Región:</label>
+                            <select name="{{ form.region.name }}" id="region">
+                                {% for r in regiones %}
+                                <option value="{{ r }}">{{ r }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="{{ form.comuna.id_for_label }}">Comuna:</label>
+                            <select name="{{ form.comuna.name }}" id="{{ form.comuna.id_for_label }}" disabled>
+                                <option value="">Seleccione una comuna</option>
+                            </select>
+                        </div>
+
+                        <script>
+                            const regionSelector = document.getElementById('region');
+                            const comunaSelector = document.getElementById('comuna');
+                            const comunas = {{comunas | safe}};
+
+                            regionSelector.addEventListener('change', () => {
+                                const regionId = regionSelector.value;
+                                if (regionId) {
+                                    comunaSelector.disabled = false;
+                                    comunaSelector.innerHTML =
+                                    '<option value="">Seleccione una comuna</option>';
+                                    comunas[regionId].forEach(comuna => {
+                                        const option = new Option(comuna.name, comuna.name);
+                                        comunaSelector.add(option);
+                                    });
+                                } else {
+                                    comunaSelector.disabled = true;
+                                    comunaSelector.innerHTML =
+                                    '<option value="">Seleccione una comuna</option>';
+                                }
+                            });
+                        </script>
+
+                        <!-- fin comunas -------------------------------------->
+                        <br>
+                        <div class="botones mt-4">
+                            <a href="{% url 'home'%}" class="btn btn-secondary me-2">Home</a>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    .titulo-form {
+        color: #3B3B3B;
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        margin-top: 1rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select {
+        padding: 0.5rem;
+        border: 1px solid #CED4DA;
+        border-radius: 0.25rem;
+        width: 100%;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    select:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+    }
+
+    .botones {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Estilos específicos para pantallas pequeñas */
+    @media screen and (max-width: 576px) {
+        .titulo-form {
+            font-size: 2rem;
+        }
+
+        .botones {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+    }
+</style>
+
+
+{% endblock %}

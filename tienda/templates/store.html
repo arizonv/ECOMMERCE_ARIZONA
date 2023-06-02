@@ -1,0 +1,161 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/store.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/formStore.css' %}" type="text/css">
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="container-busqueda">
+        <form method="POST" action="" class="d-flex align-items-center">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="buscador" placeholder="Buscar..." value="{{ request.POST.buscador }}"
+                    class="form-control my-input">
+                <button type="submit" class="btn btn-primary my-btn">Buscar</button>
+            </div>
+            <a href="{% url 'tienda:store' %}" class="btn btn-primary ms-3">Todo</a>
+        </form>
+    </div>
+</div>
+
+<div id="cart-sidebar" class="sidebar" style="max-height: calc(100vh - 50px); overflow: auto;">
+    {% include "shop/carrito.html" %}
+</div>
+
+
+<div class="container">
+    <div class="container-products">
+        {% if entity %}
+        {% for producto in entity %}
+        <div class="card card-products">
+            <div class="img-prod">
+                {% if producto.imagen %}
+                <div class="oferta-nuevo">
+                    <div class="img-overlay">
+                        {% if producto.oferta != '0' %}
+                        <h1 class="oferta">-{{ producto.oferta }}%</h1>
+                        {% endif %}
+                    </div>
+                    <div class="nuevo">
+                        {% if producto.nuevo %}
+                        <span class="logo-nuevo">Nuevo</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if producto.stock == 0 %}
+                <img class="card-img-top grayscale" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" />
+                {% else %}
+                <img class="card-img-top" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" />
+                {% endif %}
+
+
+                {% else %}
+                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+                    alt="No hay imagen disponible" />
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ producto.nombre|title }}</h4>
+                <h5 class="card-subtitle">{{ producto.marca }}</h5>
+                <h5 class="card-text">Stock: {{ producto.stock }} uni.</h5>
+                {% if producto.oferta != '0' %}
+                <p class="card-text">
+                    Precio: <b><del>${{ producto.precio|floatformat:0 }}</del> <span style="color: red;">
+                            ${{ producto.precio_descuento|floatformat:0 }}</span></b>
+                </p>
+                {% else %}
+                <p class="card-text">Precio: ${{ producto.precio|floatformat:0 }}</p>
+                {% endif %}
+                <form method="post" action="{% url 'shopping:Add' producto.id %}">
+                    {% csrf_token %}
+                    <div class="container-form">
+                        <label for="cantidad">Cantidad:</label>&nbsp;&nbsp;
+                        <div class="input-group">
+                            <input type="number" class="input-cantidad" id="cantidad" name="cantidad" value="1" min="1"
+                                max="4" readonly>
+                            <div class="cantidad-btns">
+                                &nbsp;
+                                <button type="button" class="btn-increment">+</button>
+                                <button type="button" class="btn-decrement">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% if producto.stock == 0 %}
+                    <button type="submit" class="btn btn-primary" disabled>Agregar al carrito</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center text-warning">
+            <h3> No se encontraron Productos!!</h3>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function incrementarCantidad(event) {
+        console.log("Botón de incremento presionado");
+        var button = event.target;
+        var container = button.closest(".card-body");
+        var inputCantidad = container.querySelector(".input-cantidad");
+        var valor = parseInt(inputCantidad.value);
+        var stock = parseInt(inputCantidad.getAttribute("max"));
+        if (valor < stock) {
+            valor += 1;
+            inputCantidad.value = valor;
+        }
+    }
+
+    function decrementarCantidad(event) {
+        console.log("Botón de decremento presionado");
+        var button = event.target;
+        var container = button.closest(".card-body");
+        var inputCantidad = container.querySelector(".input-cantidad");
+        var valor = parseInt(inputCantidad.value);
+        var stock = parseInt(inputCantidad.getAttribute("max"));
+
+        if (valor > 1) {
+            valor -= 1;
+            inputCantidad.value = valor;
+        }
+    }
+
+    var incrementButtons = document.querySelectorAll(".btn-increment");
+    var decrementButtons = document.querySelectorAll(".btn-decrement");
+
+    incrementButtons.forEach(function (button) {
+        button.addEventListener("click", incrementarCantidad);
+    });
+
+    decrementButtons.forEach(function (button) {
+        button.addEventListener("click", decrementarCantidad);
+    });
+</script>
+
+<!-- Script para controlar la apertura y el cierre de la barra lateral -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var cartButton = document.getElementById('cart-button');
+        var cartSidebar = document.getElementById('cart-sidebar');
+
+        cartButton.addEventListener('click', function () {
+            cartSidebar.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!cartSidebar.contains(event.target) && !cartButton.contains(event.target)) {
+                cartSidebar.classList.remove('show');
+            }
+        });
+    });
+</script>
+
+
+{% endblock %}

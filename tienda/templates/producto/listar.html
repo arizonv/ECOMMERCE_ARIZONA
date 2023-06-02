@@ -1,0 +1,97 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block content %}
+
+{% block head %}
+<LINK REL=StyleSheet HREF='{% static 'css/list.css' %}' TYPE="text/css">
+{% endblock %}
+
+
+<div class="min-vh-100 d-flex flex-colum py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-6 col-sm-4 animate__animated animate__backInRight animate__delay-0.4s">
+                <div class="card">
+                    <div class="card-header text-center font-weight-bold">
+                        {{ title }}
+                    </div>
+                    <div class="card-body table-responsive align-items-center">
+                        <!-- inline-block justify-content-end mb-2 mx-2 -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="{% url 'tienda:addproducto' %}" class="btn btn-outline-primary" type="submit">
+                                    Nuevo
+                                    Producto</a>
+                            </div>
+
+                            <form class="  form-inline" method="POST" action="">
+                                {% csrf_token %}
+                                <div class="input-group buscador">
+                                    <input type="text" class="form-control bg-light border-1 small text-center"
+                                        name="buscador" placeholder="buscar..." value="{{ request.POST.buscador }}" />
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-outline-primary">buscar</button>
+                                        &nbsp;
+                                        <a href="{% url 'tienda:listar'%}" class="btn btn-outline-primary">TODO</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <br>
+                        <table class="table table-condensed">
+                            <thead class="thead-dark text-center ">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">nombre</th>
+                                    <th scope="col">precio</th>
+                                    <th scope="col">categoria</th>
+                                    <th scope="col">marca</th>
+                                    <th scope="col">oferta</th>
+                                    <th scope="col">stock</th>
+                                    <th colspan="2">Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                {% load bootstrap_icons %} {% if entity %} {% for producto in entity %}
+                                <tr {% if producto.stock == 0 %}style="background-color: rgba(255,0,0,0.2);" {% endif %}>
+                                    <td>{{ producto.id }}</td>
+                                    <td>{{ producto.nombre }}</td>
+                                    <td>{{ producto.precio }}</td>
+                                    <td>{{ producto.categoria }}</td>
+                                    <td>{{ producto.marca }}</td>
+                                    {% if producto.oferta != '0' %}
+                                    <td>-{{ producto.oferta }}%</td>
+                                    {% else %}
+                                    <td>sin oferta</td>
+                                    {% endif %}
+                                    <td>{{ producto.stock }}</td>
+                                    <td colspan="2">
+                                        <div class="btn-group d-flex justify-content-center" role="group"
+                                            aria-label="Acciones">
+                                            <a class="btn btn-secondary btn-sm"
+                                                href="{% url 'tienda:modificar' product_id=producto.id %}">
+                                                <i class="bi bi-pencil-square"></i> Modificar
+                                            </a>
+                                            &nbsp;
+                                            <a class="btn btn-danger btn-sm"
+                                                href="{% url 'tienda:eliminar' producto.id %}">
+                                                <i class="bi bi-trash-fill"></i> Eliminar
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %} {% else %}
+                                <div class="text-center text-warning">
+                                    <h3> No se encontraron Productos!!</h3>
+                                </div>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

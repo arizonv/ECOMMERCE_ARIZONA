@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .btn {
+        background-color: rgb(10, 10, 10);
+        color: aliceblue;
+        width: 120px;
+
+    }
+
+    .btn:hover {
+        background-color: #FF5E5E;
+    }
+</style>
+<div class="containe m-5">
+    <div class="card">
+        <div class="card-body">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                {% if producto.imagen %}
+                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{ producto.imagen.url }}" />
+                </div>
+                {% else %}
+                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0"
+                        src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." /></div>
+                {% endif %}
+                <div class="col-md-6">
+                    <div class="small mb-1">Código:000-{{ producto.id }}</div>
+                    <h1 class="display-5 fw-bolder">{{ producto.nombre }}</h1>
+                    <span> Marca: <b>{{ producto.marca }}</b></span><br>
+                    <br>
+                    <p>desc.<br>{{ producto.descripcion }}</p>
+                    <div class="fs-5 mb-5">
+                        <a href="{% url 'tienda:store'%}" class="btn">Store</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock %}

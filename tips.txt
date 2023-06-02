@@ -1,0 +1,86 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="container-busqueda">
+        <form method="POST" action="" class="d-flex align-items-center">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" name="buscador" placeholder="Buscar..." value="{{ request.POST.buscador }}"
+                    class="form-control my-input">
+                <button type="submit" class="btn btn-primary my-btn">Buscar</button>
+            </div>
+            <a href="{% url 'tienda:store' %}" class="btn btn-outline-primary ms-3">Todo</a>
+        </form>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="container-products">
+        {% if entity %}
+        {% for producto in entity %}
+        <div class="card card-products">
+            <div class="img-prod">
+                {% if producto.imagen %}
+                <div class="oferta-nuevo">
+                    <div class="img-overlay">
+                        {% if producto.oferta != '0' %}
+                        <h1 class="oferta">-{{ producto.oferta }}%</h1>
+                        {% endif %}
+                    </div>
+                    <div class="nuevo">
+                        {% if producto.nuevo %}
+                        <span class="logo-nuevo">Nuevo</span>
+                        <!-- <img class="logo-nuevo" src="{% static 'assets/images/nuevo.png' %}" alt="Nuevo" /> -->
+                        {% endif %}
+                    </div>
+                </div>
+                <img class="card-img-top" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" />
+                {% else %}
+                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+                    alt="No hay imagen disponible" />
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ producto.nombre|title }}</h4>
+                <h5 class="card-subtitle">{{ producto.marca }}</h5>
+                <h5 class="card-text">Stock: {{ producto.stock }} uni.</h5>
+                {% if producto.oferta != '0' %}
+                <p class="card-text">
+                    Precio: <b><del>${{ producto.precio|floatformat:0 }}</del> <span style="color: red;">
+                            ${{ producto.precio_descuento|floatformat:0 }}</span></b>
+                </p>
+                {% else %}
+                <p class="card-text">Precio: ${{ producto.precio|floatformat:0 }}</p>
+                {% endif %}
+                <form method="post" action="{% url 'shopping:Add' producto.id %}" onsubmit="return validarCantidad()">
+                    {% csrf_token %}
+                    <div class="container-form">
+                        <label for="cantidad">Cantidad:</label>
+                        <input type="number" class="form-control" id="cantidad" name="cantidad" value="1" min="1"
+                            max="{{ producto.stock }}">
+                    </div>
+                    <div class="container-btn">
+                        {% if producto.stock == 0 %}
+                        <button type="submit" class="btn btn-primary" disabled>Agregar al carrito</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-primary">Agregar al carrito</button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endfor %}{% else %}
+        <div class="text-center text-warning">
+            <h3> No se encontraron Productos!!</h3>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+{% endblock %}

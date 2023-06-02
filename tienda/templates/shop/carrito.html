@@ -1,0 +1,94 @@
+<style>
+    .quantity-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: -1em;
+    }
+
+    .btn-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-quantity {
+        border: none;
+        text-decoration: none;
+        background-color: transparent;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 20px;
+        color: black;
+    }
+
+    .btn-minus {
+        font-size: 30px;
+        padding-right: 5px;
+    }
+
+    .btn-quantity:hover {
+        color: #555555;
+    }
+</style>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title text-center">CARRITO</h5>
+        <div class="table-responsive">
+            <table class="table table-borderless">
+                <tbody>
+                    {% if request.session.carrito %}
+                    {% for key, value in request.session.carrito.items %}
+                    <tr>
+                        <td>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="mb-0">{{ value.nombre }}</h3>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="text-muted">OFERTA.</span>
+                                {% if value.oferta != '0' %}
+                                <span class="font-weight-bold" style="color: red;">-{{ value.oferta }}%</span>
+                                {% else %}
+                                <span class="font-weight-bold"> -------</span>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="text-muted">PRECIO UNI.</span>
+                                <span class="font-weight-bold">${{ value.precio_uni }}</span>
+                            </div>
+                            <div class="quantity-container">
+                                <div class="btn-group">
+                                    <span class="text-muted"id="value-cantidad">CANT. <b>({{ value.cantidad }})</b></span>
+                                    <a href="{% url 'shopping:Add' value.producto_id %}"
+                                        class="btn-quantity btn-plus">+</a>
+                                    <span>|</span>
+                                    <a href="{% url 'shopping:Sub' value.producto_id %}"
+                                        class="btn-quantity btn-minus">-</a>
+                                </div>
+                                <span class="text-muted "><b>Sub-Total</b></span>
+                                <span class="font-weight-bold">${{ value.acumulado|floatformat:0 }}</span>
+                            </div>
+                            <hr>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td>
+                            <div class="alert alert-danger text-center">Sin Productos</div>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row text-center mt-3">
+            <div class="col-4">
+                <a href="{% url 'shopping:Cls' %}" class="btn btn-dark">Limpiar</a>
+            </div>
+            <div class="col-8">
+                <a href="{% url 'shopping:caja' %}" id="btn-guardar" class="btn btn-success">Realizar compra</a>
+            </div>
+        </div>
+    </div>
+</div>

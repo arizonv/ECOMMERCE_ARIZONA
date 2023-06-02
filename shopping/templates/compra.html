@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+  <h1 class="tienda-titulo">Realizar compra</h1>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title">Detalle de compra</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Precio unitario</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if request.session.carrito %}
+              {% for key, value in request.session.carrito.items %}
+              <tr>
+                <td>{{ value.nombre }}</td>
+                <td>${{ value.precio_uni }}</td>
+                <td>{{ value.cantidad }}</td>
+                <td>${{ value.acumulado }}</td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+              <tr>
+                <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                <td>${{ total_carrito }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-right">
+          <a href="{% url 'shopping:procesar_compra' %}" id="btn-guardar" class="btn btn-success">Comprar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}
